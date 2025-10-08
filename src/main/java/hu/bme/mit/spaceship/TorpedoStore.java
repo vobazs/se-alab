@@ -12,6 +12,8 @@ public class TorpedoStore {
   // rate of failing to fire torpedos [0.0, 1.0]
   private double FAILURE_RATE = 0.0; //NOSONAR
 
+  private Random generator = new Random(); //Random should be a private member variable 
+
   private int torpedoCount = 0;
 
   public TorpedoStore(int numberOfTorpedos){
@@ -30,18 +32,17 @@ public class TorpedoStore {
 
   public boolean fire(int numberOfTorpedos){
     if(numberOfTorpedos < 1 || numberOfTorpedos > this.torpedoCount){
-      new IllegalArgumentException("numberOfTorpedos");
+      throw new IllegalArgumentException("numberOfTorpedos");//throw keyword was necessary
     }
 
     boolean success = false;
 
     // simulate random overheating of the launcher bay which prevents firing
-    Random generator = new Random();
     double r = generator.nextDouble();
 
     if (r >= FAILURE_RATE) {
       // successful firing
-      this.torpedoCount =- numberOfTorpedos;
+      this.torpedoCount -= numberOfTorpedos;//be careful with the order of the operator
       success = true;
     } else {
       // simulated failure
